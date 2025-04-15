@@ -12,6 +12,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '23'
+          distribution: corretto
           cache: maven
 
       - name: Build with Maven
