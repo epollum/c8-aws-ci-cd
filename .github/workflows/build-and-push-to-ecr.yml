@@ -1,6 +1,9 @@
 name: 'Build worker and deploy to AWS ECR'
 
-on: push
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build-jar:
