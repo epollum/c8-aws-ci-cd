@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: payment-example-worker
-  namespace: c8-payment-example
+  namespace: c8-payment-demo
 spec:
   replicas: 1
   selector:
@@ -28,7 +28,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: payment-example-process-application-secrets
-                  key: ZEEBE_CLIENT_CLIENT_SECRET
+                  key: ZEEBE_CLIENT_SECRET
             - name: ZEEBE_AUTHORIZATION_SERVER_URL
               value: 'https://login.cloud.camunda.io/oauth/token'
             - name: ZEEBE_REST_ADDRESS
@@ -45,7 +45,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: payment-example-process-application-secrets
-                  key: ZEEBE_CLIENT_CLIENT_SECRET
+                  key: ZEEBE_CLIENT_SECRET
             - name: CAMUNDA_CLUSTER_REGION
               value: 'ric-1'
             - name: CAMUNDA_CREDENTIALS_SCOPES
@@ -60,7 +60,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: payment-example-process-application-secrets
-                  key: ZEEBE_CLIENT_CLIENT_SECRET
+                  key: ZEEBE_CLIENT_SECRET
             - name: CAMUNDA_CLIENT_CLOUD_CLUSTERID
               value: 'd8c0c502-b1d4-418f-b4ff-f2a0a117f980'
             - name: CAMUNDA_CLIENT_CLOUD_REGION
