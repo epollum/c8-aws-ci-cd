@@ -1,4 +1,4 @@
-name: 'Build worker and deploy to AWS ECR'
+name: 'Build worker and deploy to AWS ECR + EKS'
 
 on:
   push:
