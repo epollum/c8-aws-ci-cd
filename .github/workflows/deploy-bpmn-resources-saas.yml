@@ -39,7 +39,9 @@ jobs:
       - name: Get Bearer Token
         id: get-bearer-token
         run: |
-          token=$(curl -s 'https://login.cloud.camunda.io/oauth/token' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=client_credentials' --data-urlencode 'client_id=$${{ secrets.CLIENT_ID}}' --data-urlencode 'client_secret=$${{ secrets.CLIENT_SECRET }}' | jq -r '.access_token'); echo "token=$token" >> $GITHUB_OUTPUT
+          token=$(curl -s 'https://login.cloud.camunda.io/oauth/token' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=client_credentials' --data-urlencode 'client_id=$${{ secrets.CLIENT_ID}}' --data-urlencode 'client_secret=$${{ secrets.CLIENT_SECRET }}')
+          echo "$token"
+          echo "token=$token" >> $GITHUB_OUTPUT
 
 #      - name: Get Bearer Toker
 #        uses: fjogeleit/http-request-action@v1.16.4
