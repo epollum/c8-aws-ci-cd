@@ -18,3 +18,23 @@ In this repository you'll find several folders containing the resources needed t
 | docker | contains Dockerfile for building a docker image of the process application |
 | kube | contains kubernetes manifests                                              |
 | src   | contains the process application                                           |
+
+## Setup Steps
+This repository does not cover installation of a Camunda cluster, or a Kubernetes cluster. Please be sure to do the following before starting this project.
+1. Create a Camunda cluster, either self-managed or on Saas.
+2. Create a client with authorization to reach Zeebe.
+3. Create an EKS cluster
+4. Generate access keys for a user which has access to the EKS cluster.
+
+## Configuration
+This repository requires the creation of several github action secrets to function.
+
+
+| Secret Name | Description   |
+|-------------|---------------|
+| AWS_ACCESS_KEY_ID | access key id |
+| AWS_SECRET_ACCESS_KEY | secret access key | 
+| AWS_REGION | aws region of ECR repository and EKS cluster |
+| ECR_REGISTRY_URI | can be found in your aws console for ECR. omit /<repository-name> from the end of this URI. |
+| ECR_REPOSITORY | ECR repository name |
+| EKS_CLUSTER_NAME | the name of the EKS cluster you want to deploy to |
