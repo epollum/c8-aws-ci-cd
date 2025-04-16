@@ -26,9 +26,8 @@ This repository does not cover installation of a Camunda cluster, or a Kubernete
 3. Create an EKS cluster
 4. Generate access keys for a user which has access to the EKS cluster.
 
-## Configuration - GLOBAL
+## Configuration - AWS
 This repository requires the creation of several github action secrets to function.
-
 
 | Secret Name | Description   |
 |-------------|---------------|
