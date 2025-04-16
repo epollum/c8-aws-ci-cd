@@ -24,22 +24,22 @@ jobs:
           patterns: |
             src/main/resources/*.{bpmn,dmn,form}
 
-  get-bearer-token:
-    if: ${{ needs.prepare-files.outputs.matrix-modified != '[]' }}
-    needs: prepare-files
-    runs-on: ubuntu-latest
-    outputs:
-      token: $${{ steps.get-bearer-token.outputs.token }}
-    steps:
-     - name: Get Bearer Token
-       id: get-bearer-token
-       run: |
-         token=$(curl -s "https://login.cloud.camunda.io/oauth/token" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=client_credentials' --data-urlencode "client_id=${{ secrets.ZEEBE_CLIENT_ID}}" --data-urlencode "client_secret=${{ secrets.ZEEBE_CLIENT_SECRET }}" --data-urlencode 'audience=zeebe.camunda.io' | jq -r '.access_token')
-         echo "token=$token" >> $GITHUB_OUTPUT
+#  get-bearer-token:
+#    if: ${{ needs.prepare-files.outputs.matrix-modified != '[]' }}
+#    needs: prepare-files
+#    runs-on: ubuntu-latest
+#    outputs:
+#      token: $${{ steps.get-bearer-token.outputs.token }}
+#    steps:
+#     - name: Get Bearer Token
+#       id: get-bearer-token
+#       run: |
+#         token=$(curl -s "https://login.cloud.camunda.io/oauth/token" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=client_credentials' --data-urlencode "client_id=${{ secrets.ZEEBE_CLIENT_ID}}" --data-urlencode "client_secret=${{ secrets.ZEEBE_CLIENT_SECRET }}" --data-urlencode 'audience=zeebe.camunda.io' | jq -r '.access_token')
+#         echo "token=$token" >> $GITHUB_OUTPUT
 
   deploy-modified-files:
     if: ${{ needs.prepare-files.outputs.matrix-modified != '[]' }}
-    needs: [prepare-files, get-bearer-token]
+    needs: prepare-files
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -53,11 +53,16 @@ jobs:
       - name: Echo file
         run: |
           echo ${{ matrix.file }} # to test if the correct file was passed
+
+      - name: Get Bearer Token
+        run: |
+          token=$(curl -s "https://login.cloud.camunda.io/oauth/token" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=client_credentials' --data-urlencode "client_id=${{ secrets.ZEEBE_CLIENT_ID}}" --data-urlencode "client_secret=${{ secrets.ZEEBE_CLIENT_SECRET }}" --data-urlencode 'audience=zeebe.camunda.io' | jq -r '.access_token')
+          echo "token=$token" >> $GITHUB_OUTPUT
       
       - name: Deploy to Zeebe
         id: deploy-to-zeebe
         run: |
-          response=$(curl -s -X POST "https://${{ secrets.CLUSTER_REGION }}.zeebe.camunda.io/${{ secrets.CLUSTER_ID }}/v2/deployments" -H "Authorization: Bearer ${{ needs.get-bearer-token.outputs.token }}" -F "resources=@${{ github.workspace }}/${{ matrix.file }}")
+          response=$(curl -s -X POST "https://${{ secrets.CLUSTER_REGION }}.zeebe.camunda.io/${{ secrets.CLUSTER_ID }}/v2/deployments" -H "Authorization: Bearer ${{ steps.get-bearer-token.outputs.token }}" -F "resources=@${{ github.workspace }}/${{ matrix.file }}")
           echo "$response"
           echo "response=$response" >> $GITHUB_OUTPUT
 
