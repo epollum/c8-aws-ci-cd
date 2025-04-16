@@ -32,12 +32,14 @@ jobs:
       matrix:
         file:  ${{ fromJSON(needs.prepare-files.outputs.matrix-modified) }}
     steps:
-      - name: Check Out Reference File
-        uses: Bhacaz/checkout-files@v2
+      - name: Check Out File for Deployment
+        uses: actions/checkout@v4
         with:
-          files: ${{ matrix.file }}
+          sparse-checkout: |
+              ${{ matrix.file }}
+          sparse-checkout-cone-mode: false
 
-      - name: Echo file
+      - name: Echo File
         run: |
           echo ${{ matrix.file }} # to test if the correct file was passed
 
