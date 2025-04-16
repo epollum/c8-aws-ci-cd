@@ -23,11 +23,13 @@ It has the following steps:
 
 
 ## deploy-bpmn-resources-saas.yaml and deploy-bpmn-resources-sm.yaml
-These workflows are used to locate added and changed BPMNs, DMNs, and Forms. It then deploys these resources to a Camunda SaaS cluster, or a Camunda Selfmanaged (SM) cluster.
-For the required secrets, refer to [configuration for SaaS](../README.md) and [configuration for SM](../README.md).
+These workflows are used to locate added and changed BPMNs, DMNs, and Forms. It then deploys these resources to a Camunda SaaS cluster, or a Camunda Selfmanaged (SM) cluster. 
+
+For the required secrets, refer to [configuration for SaaS](../README.md) and [configuration for SM](../README.md). 
+
 For configuration options of each step, refer to the links provided in the tables below.
 
-🔵 job: prepare-files
+### 🔵 job: prepare-files
 
 This job is responsible for collecting changed and added files.
 
@@ -35,7 +37,7 @@ This job is responsible for collecting changed and added files.
 |----------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------|
 | Select added and changed resources to deploy | outputs a json array of added and modified *.bpmn, *.dmn, and *.form files in the src/main/resources folder. deleted files are not included. | https://github.com/yumemi-inc/changed-files |
 
-🔵 job: deploy-modified-files
+### 🔵 job: deploy-modified-files
 
 This job is responsible for deploying the files listed in the previous job. It iterates over the list of file paths, and deploys them one at a time.
 It only executes if at least one file was found in the previous job.
