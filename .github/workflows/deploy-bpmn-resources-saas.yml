@@ -39,7 +39,7 @@ jobs:
       - name: Get Bearer Token
         id: get-bearer-token
         run: |
-          curl -s 'https://login.cloud.camunda.io/oauth/token' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=client_credentials' --data-urlencode 'client_id=$${{ secrets.CLIENT_ID}}' --data-urlencode 'client_secret=$${{ secrets.CLIENT_SECRET }}' --data-urlencode 'audience=zeebe.camunda.io'
+          curl 'https://login.cloud.camunda.io/oauth/token' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=client_credentials' --data-urlencode 'client_id=$${{ secrets.CLIENT_ID}}' --data-urlencode 'client_secret=$${{ secrets.CLIENT_SECRET }}' --data-urlencode 'audience=zeebe.camunda.io'
 
       - name: Deploy to Zeebe
         run: |
