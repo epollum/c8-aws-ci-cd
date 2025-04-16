@@ -55,6 +55,7 @@ jobs:
           echo ${{ matrix.file }} # to test if the correct file was passed
 
       - name: Get Bearer Token
+        id: get-bearer-token
         run: |
           token=$(curl -s "https://login.cloud.camunda.io/oauth/token" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=client_credentials' --data-urlencode "client_id=${{ secrets.ZEEBE_CLIENT_ID}}" --data-urlencode "client_secret=${{ secrets.ZEEBE_CLIENT_SECRET }}" --data-urlencode 'audience=zeebe.camunda.io' | jq -r '.access_token')
           echo $token
