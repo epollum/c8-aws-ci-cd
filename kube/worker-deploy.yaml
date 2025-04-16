@@ -34,7 +34,7 @@ spec:
             - name: ZEEBE_REST_ADDRESS
               value: 'https://ric-1.zeebe.camunda.io/d8c0c502-b1d4-418f-b4ff-f2a0a117f980'
             - name: ZEEBE_GRPC_ADDRESS
-              value: 'grpcs://d8c0c502-b1d4-418f-b4ff-f2a0a117f980.ric-1.zeebe.camunda.io:443'
+              value: 'https://d8c0c502-b1d4-418f-b4ff-f2a0a117f980.ric-1.zeebe.camunda.io:443'
             - name: ZEEBE_TOKEN_AUDIENCE
               value: 'zeebe.camunda.io'
             - name: CAMUNDA_CLUSTER_ID
