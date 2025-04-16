@@ -16,6 +16,8 @@ jobs:
       matrix-added: ${{ steps.changed-files-specific.outputs.added_files }}
       matrix-modified: ${{ steps.changed-files-specific.outputs.modified_files }}
     steps:
+      - uses: actions/checkout@v4
+
       - name: Get changed files in the docs folder
         id: changed-files-specific
         uses: tj-actions/changed-files@v46

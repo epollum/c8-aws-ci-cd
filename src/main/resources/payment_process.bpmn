@@ -109,7 +109,7 @@
   },
   "schemaVersion": 12
 }</zeebe:userTaskForm>
-      <zeebe:versionTag value="9" />
+      <zeebe:versionTag value="10" />
     </bpmn:extensionElements>
     <bpmn:startEvent id="StartEvent_1" name="Payment requested">
       <bpmn:outgoing>Flow_1mhaask</bpmn:outgoing>
