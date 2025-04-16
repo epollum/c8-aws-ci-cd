@@ -39,19 +39,9 @@ jobs:
       - name: Get Bearer Token
         id: get-bearer-token
         run: |
-          token=$(curl -s 'https://login.cloud.camunda.io/oauth/token' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=client_credentials' --data-urlencode 'client_id=$${{ secrets.CLIENT_ID}}' --data-urlencode 'client_secret=$${{ secrets.CLIENT_SECRET }}' --data-urlencode 'audience=zeebe.camunda.io')
+          token=$(curl -s 'https://login.cloud.camunda.io/oauth/token' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=client_credentials' --data-urlencode 'client_id=$${{ secrets.CLIENT_ID}}' --data-urlencode 'client_secret=$${{ secrets.CLIENT_SECRET }}' --data-urlencode 'audience=zeebe.camunda.io'| jq -r '.access_token')
           echo "$token"
           echo "token=$token" >> $GITHUB_OUTPUT
-
-#      - name: Get Bearer Toker
-#        uses: fjogeleit/http-request-action@v1.16.4
-#        id: zeebeBearer
-#        with:
-#          url: 'https://login.cloud.camunda.io/oauth/token'
-#          method: 'POST'
-#          customHeaders: '{"Content-Type": "application/x-www-form-urlencoded"}'
-#          data: 'grant_type=client_credentials&audience=zeebe.camunda.io&client_id=${{ secrets.ZEEBE_CLIENT_ID }}&client_secret=${{ secrets.ZEEBE_CLIENT_SECRET }}'
-
 
       - name: Deploy to Zeebe
         run: |
