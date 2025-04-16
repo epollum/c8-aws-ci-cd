@@ -22,7 +22,16 @@ jobs:
         id: changed-files-specific
         uses: tj-actions/changed-files@v46
         with:
-          files: src/main/resources*.{bpmn,dmn,form}  # only select changed files of .bpmn, .dmn, and .form from the src/main/resources folder
+          files: src/main/resources/*.{bpmn,dmn,form} # only select changed files of .bpmn, .dmn, and .form from the src/main/resources folder
+
+      - name: List all changed files
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.modified_files }}
+        run: |
+          for file in ${ALL_CHANGED_FILES}; do
+            echo "$file was changed"
+          done
+
 
   deploy-modified-files:
     if: ${{ needs.prepare-files.outputs.matrix-modified != '[]' }}
@@ -30,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        file: ${{ needs.prepare-files.outputs.matrix-modified }}
+        file: ${{ fromJSON(needs.prepare-files.outputs.matrix-modified) }}
     steps:
       - name: Check Out Reference File
         uses: Bhacaz/checkout-files@v2
@@ -57,7 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        file: ${{ needs.prepare-files.outputs.matrix-added }}
+        file: ${{ fromJSON(needs.prepare-files.outputs.matrix-added) }}
     steps:
       - name: Check Out Reference File
         uses: Bhacaz/checkout-files@v2
