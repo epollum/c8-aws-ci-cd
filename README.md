@@ -26,7 +26,7 @@ This repository does not cover installation of a Camunda cluster, or a Kubernete
 3. Create an EKS cluster
 4. Generate access keys for a user which has access to the EKS cluster.
 
-## Configuration
+## Configuration - GLOBAL
 This repository requires the creation of several github action secrets to function.
 
 
@@ -38,3 +38,12 @@ This repository requires the creation of several github action secrets to functi
 | ECR_REGISTRY_URI | can be found in your aws console for ECR. omit /<repository-name> from the end of this URI. |
 | ECR_REPOSITORY | ECR repository name |
 | EKS_CLUSTER_NAME | the name of the EKS cluster you want to deploy to |
+
+## Configuration - SaaS
+| Secret Name         | Description                                                          |
+|---------------------|----------------------------------------------------------------------|
+| CLUSTER_REGION      | region of your cluster, available in console                         |
+| CLUSTER_ID          | your cluster id, available in console                                |
+| ZEEBE_CLIENT_ID     | client id of application which has read + write permissions to Zeebe |
+| ZEEBE_CLIENT_SECRET | client secret for ZEEBE_CLIENT_ID                                    | 
+| OAUTH_TOKEN_URL     | https://login.cloud.camunda.io/oauth/token                           | 

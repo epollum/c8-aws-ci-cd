@@ -3,7 +3,7 @@ name: 'Deploy updated BPMNs to Zeebe'
 on:
   push:
     branches:
-      - main
+      - saas
     paths:
       - 'src/main/resources/*.bpmn' # match '*.bpmn' files (created or updated)
       - 'src/main/resources/*.dmn' # match '*.dmn' files (created or updated)
