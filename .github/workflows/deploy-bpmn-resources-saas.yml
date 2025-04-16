@@ -27,7 +27,7 @@ jobs:
           ALL_ADDED_FILES: $${{ steps.changed-files.outputs.added_files }}
         run: |
           echo "Parsing changed files"
-          echo "$ALL_MODIFIED_FILES}}"
+          echo "$ALL_MODIFIED_FILES"
           modified_files=$(echo "$ALL_MODIFIED_FILES" | jq --raw-input 'split(" ")')
           echo "modified-files=$modified_files" >> $GITHUB_OUTPUT
           echo "$modified_files"
