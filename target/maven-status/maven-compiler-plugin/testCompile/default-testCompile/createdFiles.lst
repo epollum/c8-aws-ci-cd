@@ -1,0 +1,3 @@
+com/camunda/consulting/web_shop_process_app/test/ProcessUnitTest.class
+com/camunda/consulting/web_shop_process_app/test/ServiceTest.class
+com/camunda/consulting/web_shop_process_app/test/WorkerTest.class
