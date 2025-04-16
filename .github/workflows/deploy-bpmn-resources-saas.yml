@@ -13,19 +13,19 @@ jobs:
   prepare-files:
     runs-on: ubuntu-latest
     outputs:
-      matrix-added: ${{ steps.file-changes.outputs.additions }}
-      matrix-modified: ${{ steps.file-changes.outputs.changes }}
+      matrix-modified: ${{ steps.file-changes.outputs.files }}
     steps:
       - name: Select added and changed resources to deploy
         uses: yumemi-inc/changed-files@v3
         id: file-changes
         with:
+          statuses: added|modified
           format: 'json'
           patterns: |
             src/main/resources/*.{bpmn,dmn,form}
 
   deploy-modified-files:
-    if: ${{ needs.prepare-files.outputs.matrix-modified != '[]' }}
+    if: ${{ needs.prepare-files.outputs.exists }}
     needs: [prepare-files]
     runs-on: ubuntu-latest
     strategy:
