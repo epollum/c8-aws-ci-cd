@@ -1,7 +1,0 @@
-com/camunda/consulting/web_shop_process_app/PaymentProcessApplication.class
-com/camunda/consulting/web_shop_process_app/worker/CreditCardHandler.class
-com/camunda/consulting/web_shop_process_app/service/CreditCardService.class
-com/camunda/consulting/web_shop_process_app/service/CreditCardExpiredException.class
-com/camunda/consulting/web_shop_process_app/rest/StartFormRestController.class
-com/camunda/consulting/web_shop_process_app/worker/CustomerCreditHandler.class
-com/camunda/consulting/web_shop_process_app/service/CustomerService.class
