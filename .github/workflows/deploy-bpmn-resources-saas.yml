@@ -37,8 +37,9 @@ jobs:
           echo ${{ matrix.file }} # to test if the correct file was passed
 
       - name: Get Bearer Token
+        id: get-bearer-token
         run: |
-          curl 'https://login.cloud.camunda.io/oauth/token' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=client_credentials' --data-urlencode 'client_id=$${{ secrets.CLIENT_ID}}' --data-urlencode 'client_secret=$${{ secrets.CLIENT_SECRET }}'          
+          token=$(curl 'https://login.cloud.camunda.io/oauth/token' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=client_credentials' --data-urlencode 'client_id=$${{ secrets.CLIENT_ID}}' --data-urlencode 'client_secret=$${{ secrets.CLIENT_SECRET }}' | jq -r '.access_token'); echo "token=$token" >> $GITHUB_OUTPUT
 
 #      - name: Get Bearer Toker
 #        uses: fjogeleit/http-request-action@v1.16.4
@@ -52,7 +53,7 @@ jobs:
 
       - name: Deploy to Zeebe
         run: |
-          curl -X POST "https://${{ secrets.CLUSTER_REGION }}.zeebe.camunda.io/${{ secrets.CLUSTER_ID }}/v2/deployments" -H "Authorization: Bearer ${{ fromJson(steps.zeebeBearer.outputs.response).access_token }}" -F "resources=@${{ github.workspace }}/${{ matrix.file }}"
+          curl -X POST "https://${{ secrets.CLUSTER_REGION }}.zeebe.camunda.io/${{ secrets.CLUSTER_ID }}/v2/deployments" -H "Authorization: Bearer ${{ steps.get-bearer-token.outputs.status }}" -F "resources=@${{ github.workspace }}/${{ matrix.file }}"
 
   deploy-new-files:
     if: ${{ needs.prepare-files.outputs.matrix-added != '[]' }}
@@ -78,4 +79,4 @@ jobs:
 
       - name: Deploy to Zeebe
         run: |
-          curl -X POST "https://${{ secrets.CLUSTER_REGION }}.zeebe.camunda.io/${{ secrets.CLUSTER_ID }}/v2/deployments" -H "Authorization: Bearer ${{ fromJson(steps.zeebeBearer.outputs.response).access_token }}" -F "resources=@${{ github.workspace }}/${{ matrix.file }}"
+          curl -X POST "https://${{ secrets.CLUSTER_REGION }}.zeebe.camunda.io/${{ secrets.CLUSTER_ID }}/v2/deployments" -H "Authorization: Bearer ${{ steps.get-bearer-token.outputs.status }}" -F "resources=@${{ github.workspace }}/${{ matrix.file }}"
