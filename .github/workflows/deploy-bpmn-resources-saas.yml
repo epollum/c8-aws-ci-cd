@@ -26,8 +26,8 @@ jobs:
             src/main/resources/*.{bpmn,dmn,form}
       - name: list files
         env:
-          FILES = ${{ steps.file-changes.outputs.files }}
-          EXISTS = ${{ steps.result.outputs.exists }}
+          FILES: ${{ steps.file-changes.outputs.files }}
+          EXISTS: ${{ steps.result.outputs.exists }}
         run: |
           echo "$FILES"
           echo "$EXISTS"
