@@ -1,4 +1,4 @@
-FROM openjdk:21-jdk-slim as builder
+FROM openjdk:23-jdk-slim as builder
 #WORKDIR build
 EXPOSE 8080
 RUN mkdir target
