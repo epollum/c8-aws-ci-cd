@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix-added: ${{ steps.changed-files.outputs.added_files }}
-      matrix-modified: [${{ steps.changed-files.outputs.modified_files }}]
+      matrix-modified: ${{ steps.changed-files.outputs.modified_files }}
     steps:
       - uses: actions/checkout@v4
 
@@ -28,6 +28,7 @@ jobs:
         env:
           ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.modified_files }}
         run: |
+          echo "$ALL_CHANGED_FILES"
           for file in ${ALL_CHANGED_FILES}; do
             echo "$file was changed"
           done
