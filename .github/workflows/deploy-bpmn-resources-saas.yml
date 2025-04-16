@@ -38,7 +38,7 @@ jobs:
 
       - name: Get Bearer Token
         run: |
-          curl --location '$${{ secrets.OAUTH_TOKEN_URL }}' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=client_credentials' --data-urlencode 'client_id=$${{ secrets.CLIENT_ID}}' --data-urlencode 'client_secret=$${{ secrets.CLIENT_SECRET }}'          
+          curl 'https://login.cloud.camunda.io/oauth/token' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=client_credentials' --data-urlencode 'client_id=$${{ secrets.CLIENT_ID}}' --data-urlencode 'client_secret=$${{ secrets.CLIENT_SECRET }}'          
 
 #      - name: Get Bearer Toker
 #        uses: fjogeleit/http-request-action@v1.16.4
