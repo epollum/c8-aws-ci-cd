@@ -12,9 +12,6 @@ on:
 jobs:
   prepare-files:
     runs-on: ubuntu-latest
-    outputs:
-      matrix-added: ${{ steps.changed-files.outputs.added_files }}
-      matrix-modified: ${{ steps.changed-files.outputs.modified_files }}
     steps:
       - uses: actions/checkout@v4
 
@@ -26,21 +23,23 @@ jobs:
 
       - name: List all changed files
         env:
-          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.modified_files }}
+          ALL_MODIFIED_FILES: ${{ steps.changed-files.outputs.modified_files }}
+          ALL_ADDED_FILES: $${{ steps.changed-files.outputs.added_files }}
         run: |
-          echo "$ALL_CHANGED_FILES"
-          for file in ${ALL_CHANGED_FILES}; do
-            echo "$file was changed"
-          done
-
+          modified_files=$(echo "$ALL_CHANGED_FILES" | jq --raw-input 'split(" ")')
+          echo "modified-files=$modified_files" >> $GITHUB_OUTPUT
+          echo "$modified_files"
+          added_files=$(echo "$ALL_ADDED_FILES" | jq --raw-input 'split(" ")')
+          echo "added-files=$added_files" >> $GITHUB_OUTPUT
+          echo "$added_files"
 
   deploy-modified-files:
-    if: ${{ needs.prepare-files.outputs.matrix-modified != '[]' }}
+    if: ${{ needs.prepare-files.outputs.modified-files != '[]' }}
     needs: [prepare-files]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        file: ${{ needs.prepare-files.outputs.matrix-modified }}
+        file: ${{ fromJSON(needs.prepare-files.outputs.modified-files) }}
     steps:
       - name: Check Out Reference File
         uses: Bhacaz/checkout-files@v2
