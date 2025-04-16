@@ -27,6 +27,7 @@ jobs:
   get-bearer-token:
     if: ${{ needs.prepare-files.outputs.matrix-modified != '[]' }}
     needs: prepare-files
+    runs-on: ubuntu-latest
     steps:
      - name: Get Bearer Token
        id: get-bearer-token
