@@ -1,0 +1,99 @@
+name: 'Deploy updated BPMNs to Zeebe'
+
+on:
+  push:
+    paths:
+      - 'src/main/resources/*.bpmn' # match '*.bpmn' files (created or updated)
+      - 'src/main/resources/*.dmn' # match '*.dmn' files (created or updated)
+      - 'src/main/resources/*.form' # match '*.form' files (created or updated)
+    branches: [ test ] # match specific branch
+
+jobs:
+  prepare-files:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix-added: ${{ steps.file-changes.outputs.files_added }}
+      matrix-modified: ${{ steps.file-changes.outputs.files_modified }}
+    steps:
+      - id: file-changes
+        uses: trilom/file-changes-action@v1.2.4
+
+  deploy-modified-files:
+    if: ${{ needs.prepare-files.outputs.matrix-modified != '[]' }}
+    needs: [prepare-files]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        file: ${{ fromJSON(needs.prepare-files.outputs.matrix-modified) }}
+    steps:
+      - name: Check Out Reference File
+        uses: Bhacaz/checkout-files@v2
+        with:
+          files: ${{ matrix.file }}
+
+      - name: Echo file
+        run: |
+          echo ${{ matrix.file }} # to test if the correct file was passed
+
+      - name: Get Bearer Toker
+        uses: fjogeleit/http-request-action@v1.16.4
+        id: zeebeBearer
+        with:
+          url: 'https://login.cloud.camunda.io/oauth/token'
+          method: 'POST'
+          customHeaders: '{"Content-Type": "application/x-www-form-urlencoded"}'
+          data: 'grant_type=client_credentials&audience=zeebe.camunda.io&client_id=${{ secrets.ZEEBE_CLIENT_ID }}&client_secret=${{ secrets.ZEEBE_CLIENT_SECRET }}'
+
+      - name: Deploy to Zeebe
+        env:
+          CLUSTER_REGION: ${{ secrets.CLUSTER_REGION }}
+          CLUSTER_ID: $${{ secrets.CLUSTER_ID}}
+          BEARER_TOKEN: $${{ fromJson(steps.zeebeBearer.outputs.response).access_token }}
+          FILE: $${{ github.workspace }}/${{ matrix.file }}
+        run: |
+          #!/bin/bash
+          RESPONSE=$(curl -X POST -s -w "\n %{http_code}" "https://syd-1.zeebe.camunda.io/f5ed4d00-16fa-416f-9e49-7da4e398f2a6/v2/deployments" -F "resources=@/home/runner/work/camunda-git-sync/camunda-git-sync/UserTask.bpmn")
+          http_code=$(tail -n1 <<< "$RESPONSE")  # get the last line
+          content=$(sed '$ d' <<< "$RESPONSE")   # get all but the last line which contains the content
+          echo "http status on deploy attempt returned" $http_code
+          echo "content was $content"
+          if [ "$http_code" = " 200" ]; then
+          echo "true"
+          fi
+
+  deploy-new-files:
+    if: ${{ needs.prepare-files.outputs.matrix-added != '[]' }}
+    needs: [prepare-files]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        file: ${{ fromJSON(needs.prepare-files.outputs.matrix-added) }}
+    steps:
+      - name: Check Out Reference File
+        uses: Bhacaz/checkout-files@v2
+        with:
+          files: ${{ matrix.file }}
+
+      - name: Get Bearer Toker
+        uses: fjogeleit/http-request-action@v1.16.4
+        id: zeebeBearer
+        with:
+          url: 'https://login.cloud.camunda.io/oauth/token'
+          method: 'POST'
+          customHeaders: '{"Content-Type": "application/x-www-form-urlencoded"}'
+          data: 'grant_type=client_credentials&audience=zeebe.camunda.io&client_id=${{ secrets.ZEEBE_CLIENT_ID }}&client_secret=${{ secrets.ZEEBE_CLIENT_SECRET }}'
+
+      - name: Deploy to Zeebe
+        env:
+          CLUSTER_REGION: ${{ secrets.CLUSTER_REGION }}
+          CLUSTER_ID: $${{ secrets.CLUSTER_ID}}
+          BEARER_TOKEN: $${{ fromJson(steps.zeebeBearer.outputs.response).access_token }}
+          FILE: $${{ github.workspace }}/${{ matrix.file }}
+        run: |
+          #!/bin/bash
+          RESPONSE=$(curl -X POST -s -w "\n %{http_code}" "https://syd-1.zeebe.camunda.io/f5ed4d00-16fa-416f-9e49-7da4e398f2a6/v2/deployments" -F "resources=@/home/runner/work/camunda-git-sync/camunda-git-sync/UserTask.bpmn")
+          http_code=$(tail -n1 <<< "$RESPONSE")  # get the last line
+          content=$(sed '$ d' <<< "$RESPONSE")   # get all but the last line which contains the content
+          echo "http status on deploy attempt returned" $http_code
+          echo "content was $content"
+          exit 0
