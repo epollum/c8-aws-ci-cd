@@ -13,16 +13,16 @@ jobs:
   prepare-files:
     runs-on: ubuntu-latest
     outputs:
-      matrix-added: ${{ steps.changed-files-specific.outputs.added_files }}
-      matrix-modified: ${{ steps.changed-files-specific.outputs.modified_files }}
+      matrix-added: ${{ steps.changed-files.outputs.added_files }}
+      matrix-modified: ${{ steps.changed-files.outputs.modified_files }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Get changed files in the docs folder
-        id: changed-files-specific
-        uses: tj-actions/changed-files@v46
-        with:
-          files: src/main/resources/*.{bpmn,dmn,form} # only select changed files of .bpmn, .dmn, and .form from the src/main/resources folder
+        id: changed-files
+        uses: tj-actions/changed-files@ed68ef82c095e0d48ec87eccea555d944a631a4c
+#        with:
+#          files: src/main/resources/*.{bpmn,dmn,form} # only select changed files of .bpmn, .dmn, and .form from the src/main/resources folder
 
       - name: List all changed files
         env:
