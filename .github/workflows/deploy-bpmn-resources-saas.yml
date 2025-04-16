@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        file: ${{ fromJSON(needs.prepare-files.outputs.matrix-modified) }}
+        file: ${{ needs.prepare-files.outputs.matrix-modified }}
     steps:
       - name: Check Out Reference File
         uses: Bhacaz/checkout-files@v2
