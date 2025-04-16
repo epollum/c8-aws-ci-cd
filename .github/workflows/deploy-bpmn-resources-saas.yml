@@ -24,9 +24,19 @@ jobs:
           patterns: |
             src/main/resources/*.{bpmn,dmn,form}
 
+  get-bearer-token:
+    if: ${{ needs.prepare-files.outputs.matrix-modified != '[]' }}
+    needs: prepare-files
+    steps:
+     - name: Get Bearer Token
+       id: get-bearer-token
+       run: |
+         token=$(curl -s "https://login.cloud.camunda.io/oauth/token" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=client_credentials' --data-urlencode "client_id=${{ secrets.ZEEBE_CLIENT_ID}}" --data-urlencode "client_secret=${{ secrets.ZEEBE_CLIENT_SECRET }}" --data-urlencode 'audience=zeebe.camunda.io' | jq -r '.access_token')
+         echo "token=$token" >> $GITHUB_OUTPUT
+
   deploy-modified-files:
     if: ${{ needs.prepare-files.outputs.matrix-modified != '[]' }}
-    needs: [prepare-files]
+    needs: [prepare-files, get-bearer-token]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -41,12 +51,6 @@ jobs:
         run: |
           echo ${{ matrix.file }} # to test if the correct file was passed
 
-      - name: Get Bearer Token
-        id: get-bearer-token
-        run: |
-          token=$(curl -s "https://login.cloud.camunda.io/oauth/token" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=client_credentials' --data-urlencode "client_id=${{ secrets.ZEEBE_CLIENT_ID}}" --data-urlencode "client_secret=${{ secrets.ZEEBE_CLIENT_SECRET }}" --data-urlencode 'audience=zeebe.camunda.io' | jq -r '.access_token')
-          echo "token=$token" >> $GITHUB_OUTPUT
-
       - name: Deploy to Zeebe
         run: |
-          curl -X POST "https://${{ secrets.CLUSTER_REGION }}.zeebe.camunda.io/${{ secrets.CLUSTER_ID }}/v2/deployments" -H "Authorization: Bearer ${{ steps.get-bearer-token.outputs.token }}" -F "resources=@${{ github.workspace }}/${{ matrix.file }}"
+          curl -X POST "https://${{ secrets.CLUSTER_REGION }}.zeebe.camunda.io/${{ secrets.CLUSTER_ID }}/v2/deployments" -H "Authorization: Bearer ${{ needs.get-bearer-token.outputs.token }}" -F "resources=@${{ github.workspace }}/${{ matrix.file }}"
