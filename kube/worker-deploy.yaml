@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: risk-calculation-worker
+  namespace: c8-payment-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: risk-calculation-worker
+  template:
+    metadata:
+      labels:
+        app: risk-calculation-worker
+    spec:
+      containers:
+        - name: risk-calculation-worker
+          image: 655394773887.dkr.ecr.us-west-1.amazonaws.com/consulting-challenge/git-hub-actions:latest
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: ZEEBE_ADDRESS
+              value: 'd8c0c502-b1d4-418f-b4ff-f2a0a117f980.ric-1.zeebe.camunda.io:443'
+            - name: ZEEBE_CLIENT_ID
+              value: 'E_Zz_zZ5x0hEkzFCJH52M8-GIQZk-sO6'
+            - name: ZEEBE_CLIENT_SECRET
+              value: 'A2WWNL7M6yLrqx.oDCybS31sPLbX0rcAKHsUEzX_sw2BIGS4DiQ5InU0CRoNYMUh'
+            - name: ZEEBE_AUTHORIZATION_SERVER_URL
+              value: 'https://login.cloud.camunda.io/oauth/token'
+            - name: ZEEBE_REST_ADDRESS
+              value: 'https://ric-1.zeebe.camunda.io/d8c0c502-b1d4-418f-b4ff-f2a0a117f980'
+            - name: ZEEBE_GRPC_ADDRESS
+              value: 'grpcs://d8c0c502-b1d4-418f-b4ff-f2a0a117f980.ric-1.zeebe.camunda.io:443'
+            - name: ZEEBE_TOKEN_AUDIENCE
+              value: 'zeebe.camunda.io'
+            - name: CAMUNDA_CLUSTER_ID
+              value: 'd8c0c502-b1d4-418f-b4ff-f2a0a117f980'
+            - name: CAMUNDA_CLIENT_ID
+              value: 'E_Zz_zZ5x0hEkzFCJH52M8-GIQZk-sO6'
+            - name: CAMUNDA_CLIENT_SECRET
+              value: 'A2WWNL7M6yLrqx.oDCybS31sPLbX0rcAKHsUEzX_sw2BIGS4DiQ5InU0CRoNYMUh'
+            - name: CAMUNDA_CLUSTER_REGION
+              value: 'ric-1'
+            - name: CAMUNDA_CREDENTIALS_SCOPES
+              value: 'Zeebe,Tasklist,Operate'
+            - name: CAMUNDA_TASKLIST_BASE_URL
+              value: 'https://ric-1.tasklist.camunda.io/d8c0c502-b1d4-418f-b4ff-f2a0a117f980'
+            - name: CAMUNDA_OPERATE_BASE_URL
+              value: 'https://ric-1.operate.camunda.io/d8c0c502-b1d4-418f-b4ff-f2a0a117f980'
+            - name: CAMUNDA_OAUTH_URL
+              value: 'https://login.cloud.camunda.io/oauth/token'
+            - name: CAMUNDA_CLIENT_MODE
+              value: 'saas'
+            - name: CAMUNDA_CLIENT_AUTH_CLIENTID
+              value: 'E_Zz_zZ5x0hEkzFCJH52M8-GIQZk-sO6'
+            - name: CAMUNDA_CLIENT_AUTH_CLIENTSECRET
+              value: 'A2WWNL7M6yLrqx.oDCybS31sPLbX0rcAKHsUEzX_sw2BIGS4DiQ5InU0CRoNYMUh'
+            - name: CAMUNDA_CLIENT_CLOUD_CLUSTERID
+              value: 'd8c0c502-b1d4-418f-b4ff-f2a0a117f980'
+            - name: CAMUNDA_CLIENT_CLOUD_REGION
+              value: 'ric-1'
+          resources:
+            limits:
+              memory: "768Mi"
+              cpu: "500m"
+            requests:
+              memory: "768Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 5
