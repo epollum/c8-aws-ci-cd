@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: risk-calculation-worker
-          image: 655394773887.dkr.ecr.us-west-1.amazonaws.com/consulting-challenge/git-hub-actions:latest
+          image: $DOCKER_IMAGE
           ports:
             - containerPort: 8080
               name: http
