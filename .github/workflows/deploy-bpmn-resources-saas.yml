@@ -13,11 +13,14 @@ jobs:
   prepare-files:
     runs-on: ubuntu-latest
     outputs:
-      matrix-added: ${{ steps.file-changes.outputs.files_added }}
-      matrix-modified: ${{ steps.file-changes.outputs.files_modified }}
+      matrix-added: ${{ steps.changed-files-specific.outputs.added_files }}
+      matrix-modified: ${{ steps.changed-files-specific.outputs.modified_files }}
     steps:
-      - id: file-changes
-        uses: trilom/file-changes-action@v1.2.4
+      - name: Get changed files in the docs folder
+        id: changed-files-specific
+        uses: tj-actions/changed-files@v46
+        with:
+          files: src/main/resources*.{bpmn,dmn,form}  # only select changed files of .bpmn, .dmn, and .form from the src/main/resources folder
 
   deploy-modified-files:
     if: ${{ needs.prepare-files.outputs.matrix-modified != '[]' }}
