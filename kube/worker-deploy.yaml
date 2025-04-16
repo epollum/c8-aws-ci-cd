@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: risk-calculation-worker
-  namespace: c8-payment-demo
+  name: payment-example-worker
+  namespace: c8-payment-example
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: risk-calculation-worker
+      app: payment-example-worker
   template:
     metadata:
       labels:
-        app: risk-calculation-worker
+        app: payment-example-worker
     spec:
       containers:
         - name: risk-calculation-worker
@@ -23,9 +23,12 @@ spec:
             - name: ZEEBE_ADDRESS
               value: 'd8c0c502-b1d4-418f-b4ff-f2a0a117f980.ric-1.zeebe.camunda.io:443'
             - name: ZEEBE_CLIENT_ID
-              value: 'E_Zz_zZ5x0hEkzFCJH52M8-GIQZk-sO6'
+              value: 'LFXA25Oe.v1J_qUqCvLt53.0xaQ1eEyW'
             - name: ZEEBE_CLIENT_SECRET
-              value: 'A2WWNL7M6yLrqx.oDCybS31sPLbX0rcAKHsUEzX_sw2BIGS4DiQ5InU0CRoNYMUh'
+              valueFrom:
+                secretKeyRef:
+                  name: payment-example-process-application-secrets
+                  key: ZEEBE_CLIENT_CLIENT_SECRET
             - name: ZEEBE_AUTHORIZATION_SERVER_URL
               value: 'https://login.cloud.camunda.io/oauth/token'
             - name: ZEEBE_REST_ADDRESS
@@ -37,25 +40,27 @@ spec:
             - name: CAMUNDA_CLUSTER_ID
               value: 'd8c0c502-b1d4-418f-b4ff-f2a0a117f980'
             - name: CAMUNDA_CLIENT_ID
-              value: 'E_Zz_zZ5x0hEkzFCJH52M8-GIQZk-sO6'
+              value: 'LFXA25Oe.v1J_qUqCvLt53.0xaQ1eEyW'
             - name: CAMUNDA_CLIENT_SECRET
-              value: 'A2WWNL7M6yLrqx.oDCybS31sPLbX0rcAKHsUEzX_sw2BIGS4DiQ5InU0CRoNYMUh'
+              valueFrom:
+                secretKeyRef:
+                  name: payment-example-process-application-secrets
+                  key: ZEEBE_CLIENT_CLIENT_SECRET
             - name: CAMUNDA_CLUSTER_REGION
               value: 'ric-1'
             - name: CAMUNDA_CREDENTIALS_SCOPES
-              value: 'Zeebe,Tasklist,Operate'
-            - name: CAMUNDA_TASKLIST_BASE_URL
-              value: 'https://ric-1.tasklist.camunda.io/d8c0c502-b1d4-418f-b4ff-f2a0a117f980'
-            - name: CAMUNDA_OPERATE_BASE_URL
-              value: 'https://ric-1.operate.camunda.io/d8c0c502-b1d4-418f-b4ff-f2a0a117f980'
+              value: 'Zeebe'
             - name: CAMUNDA_OAUTH_URL
               value: 'https://login.cloud.camunda.io/oauth/token'
             - name: CAMUNDA_CLIENT_MODE
               value: 'saas'
             - name: CAMUNDA_CLIENT_AUTH_CLIENTID
-              value: 'E_Zz_zZ5x0hEkzFCJH52M8-GIQZk-sO6'
+              value: 'LFXA25Oe.v1J_qUqCvLt53.0xaQ1eEyW'
             - name: CAMUNDA_CLIENT_AUTH_CLIENTSECRET
-              value: 'A2WWNL7M6yLrqx.oDCybS31sPLbX0rcAKHsUEzX_sw2BIGS4DiQ5InU0CRoNYMUh'
+              valueFrom:
+                secretKeyRef:
+                  name: payment-example-process-application-secrets
+                  key: ZEEBE_CLIENT_CLIENT_SECRET
             - name: CAMUNDA_CLIENT_CLOUD_CLUSTERID
               value: 'd8c0c502-b1d4-418f-b4ff-f2a0a117f980'
             - name: CAMUNDA_CLIENT_CLOUD_REGION
