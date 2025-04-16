@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix-modified: ${{ steps.file-changes.outputs.files }}
+      exists: ${{ steps.result.outputs.exists }}
     steps:
       - name: Select added and changed resources to deploy
         uses: yumemi-inc/changed-files@v3
@@ -23,6 +24,13 @@ jobs:
           format: 'json'
           patterns: |
             src/main/resources/*.{bpmn,dmn,form}
+      - name: list files
+        env:
+          FILES = ${{ steps.file-changes.outputs.files }}
+          EXISTS = ${{ steps.result.outputs.exists }}
+        run: |
+          echo "$FILES"
+          echo "$EXISTS"
 
   deploy-modified-files:
     if: ${{ needs.prepare-files.outputs.exists }}
