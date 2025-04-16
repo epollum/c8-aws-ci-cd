@@ -62,6 +62,6 @@ jobs:
           echo "response=$response" >> $GITHUB_OUTPUT
 
       - name: Fail if not Deployed
-        if: !contains(steps.deploy-to-zeebe.outputs.response, 'deploy')
+        if: contains(steps.deploy-to-zeebe.outputs.response, 'deploy')
         run: |
           exit 1
