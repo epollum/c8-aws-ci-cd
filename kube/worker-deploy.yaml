@@ -14,7 +14,7 @@ spec:
         app: payment-example-worker
     spec:
       containers:
-        - name: risk-calculation-worker
+        - name: payment-example-worker
           image: DOCKER_IMAGE
           ports:
             - containerPort: 8080
