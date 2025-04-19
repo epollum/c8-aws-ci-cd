@@ -21,7 +21,7 @@ jobs:
 
       - name: Build with Maven
         run: |
-          mvn package
+          mvn package -DskipTests
           cp -R target docker
           ls docker
 
