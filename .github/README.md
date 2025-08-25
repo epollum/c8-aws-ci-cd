@@ -53,4 +53,4 @@ This repository requires the creation of several github action secrets to functi
 | ZEEBE_URL           | url of Zeebe Rest API, is typically the gateway |
 | ZEEBE_CLIENT_ID     | client id of application which has read + write permissions to Zeebe |
 | ZEEBE_CLIENT_SECRET | client secret for ZEEBE_CLIENT_ID                                    | 
-| OAUTH_TOKEN_URL     | https://login.cloud.camunda.io/oauth/token                           | 
+| OAUTH_TOKEN_URL     | Dependent on your OAUTH provider                   | 
